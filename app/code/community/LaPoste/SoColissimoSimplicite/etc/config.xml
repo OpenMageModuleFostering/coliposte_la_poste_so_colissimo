@@ -13,7 +13,7 @@
 <config>
     <modules>
         <LaPoste_SoColissimoSimplicite>
-            <version>2.3.2</version>
+            <version>2.3.3</version>
         </LaPoste_SoColissimoSimplicite>
     </modules>
 
@@ -178,15 +178,7 @@
                 <sallowspecific>1</sallowspecific>
                 <model>LaPoste_SoColissimoSimplicite_Model_Carrier_ShippingMethod</model>
                 <!-- association entre les civilités utilisées dans Magento et celles utilisées dans So Colissimo -->
-                <mapprefix>
-                    <![CDATA[
-{
-"MR":"M."
-,"MLE":"Mlle"
-,"MME":"Mme"
-}
-                    ]]>
-                </mapprefix>
+                <mapprefix><![CDATA[{"MR": "M.", "MLE": "Mlle", "MME": "Mme"}]]></mapprefix>
                 <!-- langues disponibles dans l'interface So Colissimo -->
                 <!-- l'IFrame So Colissimo utilisera la même langue que Magento si celle-ci fait partie de la liste ci-dessous -->
                 <!-- n'intégrer dans cette liste que les langues connues de So Colissimo (pour l'instant, uniquement le français) -->

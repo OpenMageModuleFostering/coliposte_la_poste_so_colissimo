@@ -84,7 +84,7 @@ SocoShippingMethod.prototype = {
         var socoIFrameContainer = $('socolissimosimplicite_iframe_wrapper');
         if (socoIFrameContainer === null) {
             socoIFrameContainer = new Element('div', {id: 'socolissimosimplicite_iframe_wrapper'});
-            $$('input[value="' + this.options.rateCode + '"]').first().up().appendChild(socoIFrameContainer);
+            $$('input[value="' + this.options.rateCode + '"]').first().up('li').appendChild(socoIFrameContainer);
         }
 
         // création de l'IFrame
@@ -106,7 +106,17 @@ SocoShippingMethod.prototype = {
     },
 
     /**
-     * Cancel So Cocolissimo IFrame and reenable disabled checkout feature
+     * Suppression de l'IFrame So Colissimo
+     */
+    removeIFrame: function() {
+        var socoIframeContainer = $('socolissimosimplicite_iframe_wrapper');
+        if (socoIframeContainer !== null) {
+            socoIframeContainer.remove();
+        }
+    },
+
+    /**
+     * Supprime l'IFrame So Colissimo et réactive le choix des autres moyens de livraison
      */
     cancel: function() {
         // réactivation des modes de livraison
@@ -116,10 +126,7 @@ SocoShippingMethod.prototype = {
         }
 
         // suppression de l'IFrame
-        var socoIframeContainer = $('socolissimosimplicite_iframe_wrapper');
-        while (socoIframeContainer.firstChild) {
-            socoIframeContainer.removeChild(socoIframeContainer.firstChild);
-        }
+        this.removeIFrame();
 
         // annulation du blocage du passage à l'étape suivante
         shippingMethod.resetLoadWaiting();
