@@ -1,0 +1,73 @@
+<?php
+/**
+ * LaPoste_SoColissimoSimplicite
+ *
+ * @category  LaPoste
+ * @package   LaPoste_SoColissimoSimplicite
+ * @copyright Copyright (c) 2010 La Poste
+ * @author    Smile (http://www.smile.fr)
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+<?php
+/* @var $_socoHelper LaPoste_SoColissimoSimplicite_Helper_Data */
+$_socoHelper = $this->helper('socolissimosimplicite');
+?>
+
+<?php if (!($_shippingRateGroups = $this->getShippingRates())): ?>
+    <p><?php echo $this->__('Sorry, no quotes are available for this order at this time.'); ?></p>
+<?php else: ?>
+    <?php // fix javascript bug on community 1.5 ?>
+    <?php if (version_compare(Mage::getVersion(), '1.5.0.0', '>=') and version_compare(Mage::getVersion(), '1.6.0.0', '<')): ?>
+        <script type="text/javascript">
+        //<![CDATA[
+            var lastPrice = null;
+            var quoteBaseGrandTotal = <?php echo (float)$this->getQuoteBaseGrandTotal() ?>;
+            var checkQuoteBaseGrandTotal = quoteBaseGrandTotal;
+        //]]>
+        </script>
+    <?php endif; ?>
+    <dl class="sp-methods">
+
+    <?php $_sole = count($_shippingRateGroups) == 1; foreach ($_shippingRateGroups as $code => $_rates): ?>
+        <dt><?php echo $this->getCarrierName($code) ?></dt>
+        <dd>
+            <ul>
+            <?php foreach ($_rates as $_rate): ?>
+                <?php $shippingCodePrice[] = "'".$_rate->getCode()."':".(float)$_rate->getPrice(); ?>
+                <li>
+                   <?php if ($_rate->getErrorMessage()): ?>
+                    <ul class="messages"><li class="error-msg"><ul><li><?php echo $_rate->getErrorMessage() ?></li></ul></li></ul>
+                   <?php else: ?>
+                        <?php if ($_sole) : ?>
+                        <span class="no-display"><input name="shipping_method" type="radio" value="<?php echo $_rate->getCode() ?>" id="s_method_<?php echo $_rate->getCode() ?>" checked="checked" /></span>
+                        <?php else: ?>
+                        <input name="shipping_method" type="radio" value="<?php echo $_rate->getCode() ?>" id="s_method_<?php echo $_rate->getCode() ?>"<?php if($_rate->getCode()===$this->getAddressShippingMethod()) echo ' checked="checked"' ?> class="radio"/>
+
+                        <?php if ($_rate->getCode() === $this->getAddressShippingMethod()): ?>
+                        <script type="text/javascript">
+                            //<![CDATA[
+                                lastPrice = <?php echo (float)$_rate->getPrice() ?>;
+                            //]]>
+                        </script>
+                        <?php endif ?>
+                        <?php endif ?>
+
+                        <?php echo $this->getItemHtml($_rate); ?>
+
+                        <?php // disponibilité de la plateforme soco ?>
+                        <?php if ($_rate->getCode() == $_socoHelper->getRateCode()): ?>
+                            <?php if ($_socoHelper->checkServiceAvailability()): ?>
+                                <div id="socolissimosimplicite_iframe_wrapper"></div>
+                            <?php else: ?>
+                                <ul class="messages" id="socolissimo-error"><li class="error-msg"><ul><li><?php echo $_socoHelper->getServiceNotAvailableMessage(); ?></li></ul></li></ul>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                   <?php endif ?>
+                </li>
+            <?php endforeach ?>
+            </ul>
+        </dd>
+    <?php endforeach; ?>
+    </dl>
+<?php endif; ?>

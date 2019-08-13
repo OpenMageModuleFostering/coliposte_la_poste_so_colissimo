@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<package>
+    <name>ColiPoste_La_Poste_So_Colissimo</name>
+    <version>2.2.0</version>
+    <stability>stable</stability>
+    <license uri="http://www.opensource.org/licenses/osl-3.0.php">OSL v3.0</license>
+    <channel>community</channel>
+    <extends/>
+    <summary>Extension officielle permettant de proposer le mode de livraison So Colissimo de La Poste / ColisPoste</summary>
+    <description>Cette extension officielle permet de proposer &#xE0; vos clients le mode de livraison So Colissimo.&#xD;
+&#xD;
+So Colissimo offre le choix parmi 5 solutions de livraison et un grand r&#xE9;seau de points de retraits, partout en France m&#xE9;tropolitaine pour toutes vos commandes en ligne :&#xD;
+&#xD;
+    * mon domicile : livraison &#xE0; l'adresse de votre choix, entre 8h et 13h.&#xD;
+    * mon rendez-vous : livraison sur rendez-vous entre 17h et 21h30 &#xE0; l'adresse de votre choix.&#xD;
+    * mon espace cityssimo : livraison dans l'un des 31 espaces Cityssimo.&#xD;
+    * mon bureau de poste : livraison dans l'un des 10.000 bureaux de poste de votre choix.&#xD;
+    * mon commer&#xE7;ant : livraison chez l'un des nombreux commer&#xE7;ants de notre r&#xE9;seau partenaire.&#xD;
+&#xD;
+Test&#xE9; et valid&#xE9; sur Magento :&#xD;
+- CE 1.3.2.4, CE 1.4.1.1, CE 1.4.2.0, CE 1.5.1.0, CE 1.6.1.0, CE 1.6.2.0, CE 1.7.0.0, CE 1.7.0.2&#xD;
+- PE 1.8&#xD;
+- EE 1.8, EE 1.9, EE 1.10, EE 1.11, EE 1.12&#xD;
+&#xD;
+R&#xE9;alisation par Smile.</description>
+    <notes>Compatible 1.7</notes>
+    <authors><author><name>Berlioz</name><user>Aline</user><email>Aline.BERLIOZ@laposte.fr</email></author></authors>
+    <date>2013-05-14</date>
+    <time>15:49:24</time>
+    <contents><target name="magedesign"><dir><dir name="frontend"><dir name="default"><dir name="default"><dir name="template"><dir name="socolissimosimplicite"><file name="empty.phtml" hash="e23b28c9dc36e8e3fae4a71a504ced16"/><dir name="form"><file name="failure.phtml" hash="6899294fef95e8ba97e923a95ce6e800"/></dir><file name="form.phtml" hash="25e9ef6a8adea89c8a85554d06102da3"/><dir name="onepage"><dir name="shipping_method"><dir name="available"><file name="default.phtml" hash="abd730520d57a1eaf53f9b1e145c9496"/><file name="socolissimosimplicite.phtml" hash="b3f9065c10b7f6aee499e8a25ef210e8"/></dir><file name="available.phtml" hash="caa8262a0d3f5dd3d12e7714843fa8f3"/></dir><file name="shipping_method.phtml" hash="2084ca8fe9c3b38f98b76b16dd5e753b"/></dir></dir></dir><dir name="layout"><file name="socolissimosimplicite.xml" hash="9ac746d2644eae5c257290e6845421cb"/></dir></dir></dir></dir></dir></target><target name="magelocale"><dir><dir name="fr_FR"><file name="LaPoste_SoColissimoSimplicite.csv" hash="ddc252df7c3ca35cc4bf5bbe7fdb9433"/></dir></dir></target><target name="magecommunity"><dir><dir name="LaPoste"><dir name="SoColissimoSimplicite"><dir name="Block"><file name="Form.php" hash="df4d1dfbd6f8fbb6088b505b285ed7fa"/><dir name="Onepage"><dir name="Shipping"><dir name="Method"><dir name="Available"><file name="Item.php" hash="28d54a8b59dfff7365e3de0db158ac72"/></dir><file name="Available.php" hash="87903ab9334a817c6970d5225ff4129d"/></dir></dir></dir><file name="Onepage.php" hash="9c479fb9298c513ecc5b1473b6366391"/></dir><dir name="Helper"><file name="Data.php" hash="83b0fc3ee84ccaf4e21bbf4759960502"/></dir><dir name="Model"><dir name="Carrier"><file name="ShippingMethod.php" hash="a824ef65678448f9e38e49a659546297"/></dir><dir name="Mysql4"><dir name="Transaction"><file name="Collection.php" hash="af31dc43455baed304eb087a1f5a022b"/></dir><file name="Transaction.php" hash="8cf12de5f6a6a50cf69e42e6da77d2f9"/></dir><file name="Observer.php" hash="563e26117a0cc90affcad28a503cef5d"/><dir name="System"><dir name="Config"><dir name="Source"><dir name="Shipping"><file name="Amountbasetype.php" hash="210a1f9bd6c9daac92fb213d3b4d662b"/></dir></dir></dir></dir><file name="Transaction.php" hash="023d0f47d98584520dad99f2b06ed681"/></dir><dir name="Test"><dir name="Model"><dir name="Carrier"><file name="ShippingMethodTest.php" hash="09e08117c7f70ca3304f3c0002f62e0f"/></dir></dir></dir><dir name="controllers"><file name="FormController.php" hash="aeeb7dcc7ce076d8f13ff136bd49dd6d"/></dir><dir name="etc"><file name="config.xml" hash="26f3d2ccbb9634de3184b3bec24dfe12"/><file name="system.xml" hash="2b6391525f70bbb55b9c5c53db301f87"/></dir><dir name="sql"><dir name="socolissimosimplicite_setup"><file name="mysql4-install-1.0.0.php" hash="39d84d2cee2d8c2c0633c17891e045aa"/><file name="mysql4-uninstall-0.1.0.php" hash="471abbb64f1a962e8cc09d7bf48fe46c"/><file name="mysql4-upgrade-1.0.6-1.0.7.php" hash="b7939e9bd64cadbdc9ccd77b52d19d16"/><file name="mysql4-upgrade-1.1.1-2.0.0.php" hash="bd7915ab8d3871491e496f33617d3754"/></dir></dir></dir></dir></dir></target><target name="mageetc"><dir><dir name="modules"><file name="LaPoste_SoColissimoSimplicite.xml" hash="154dd96df1089ac29e87eaa8677693c3"/></dir></dir></target></contents>
+    <compatible/>
+    <dependencies><required><php><min>5.1.0</min><max>6.0.0</max></php></required></dependencies>
+</package>

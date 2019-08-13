@@ -1,0 +1,23 @@
+<?php
+/**
+ * LaPoste_SoColissimoSimplicite
+ *
+ * @category  LaPoste
+ * @package   LaPoste_SoColissimoSimplicite
+ * @copyright Copyright (c) 2010 La Poste
+ * @author    Smile (http://www.smile.fr)
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+<?php
+$_rate = $this->getRate();
+/* @var $_helper LaPoste_SocolissimoSimplicite_Helper_Data */
+$_helper  = $this->helper('socolissimosimplicite');
+// get the shipping price
+$_excl = $this->getShippingPrice($_rate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax());
+// convert the shipping price to a formatted label
+$_excl = Mage::helper('socolissimosimplicite')->getShippingPriceLabel($_excl);
+?>
+<label for="s_method_<?php echo $_rate->getCode() ?>"><?php echo $_rate->getMethodTitle() ?> <?php echo $_excl; ?></label>
+<br />
+<?php echo $_helper->getSelectMessage() ?>

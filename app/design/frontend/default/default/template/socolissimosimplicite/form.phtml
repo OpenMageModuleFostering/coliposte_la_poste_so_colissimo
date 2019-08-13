@@ -1,0 +1,49 @@
+<?php
+/**
+ * LaPoste_SoColissimoSimplicite
+ *
+ * @category  LaPoste
+ * @package   LaPoste_SoColissimoSimplicite
+ * @copyright Copyright (c) 2010 La Poste
+ * @author    Smile (http://www.smile.fr)
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+<?php
+$_address = $this->getShippingAddress();
+$_serviceUnavailableRedirect = $this->getServiceUnavailableRedirect();
+/* @var $_helper LaPoste_SoColissimoSimplicite_Helper_Data */
+$_helper  = $this->helper('socolissimosimplicite');
+?>
+
+<?php if (!empty($_serviceUnavailableRedirect)): ?>
+    <h3><?php echo $this->__("Les options du lieu de livraison ne sont pas disponibles.<br />Le colis sera livré à votre adresse de livraison.") ?></h3>
+    <p><?php echo $this->__("La page va se mettre à jour à l'étape suivante.") ?></p>
+    <form name="socolissimosimpliciteform" action="<?php echo $_serviceUnavailableRedirect ?>" target="_parent" method="get"></form>
+<?php else: ?>
+    <?php if($this->getRedirectMessage()): ?>
+    <h3><?php echo $this->getRedirectMessage(); ?></h3>
+    <?php endif; ?>
+    <form name="socolissimosimpliciteform" action="<?php echo $this->getUrlFoWithReturnUrlKo(); ?>" method="post">
+        <?php // account id ?>
+        <input type="hidden" name="pudoFOId" value="<?php echo $this->getAccountID(); ?>" />
+
+        <?php // champs de la transaction ?>
+        <?php $_fields = $_helper->getFieldsToSend($this->getTransaction()->getId(), $_address); ?>
+        <?php unset($_fields['trReturnUrlKo']); ?>
+        <?php foreach ($_fields as $_field => $_value): ?>
+        <?php // on ignore les champs vides (pas obligatoire mais cela permet d'envoyer moins de données) ?>
+        <?php if ($_value !== null && $_value !== '' && $_value !== false): ?>
+        <input type="hidden" name="<?php echo $_field; ?>" value="<?php echo $_value; ?>" />
+        <?php endif; ?>
+        <?php endforeach; ?>
+
+        <?php // signature de la transaction ?>
+        <input type="hidden" name="signature" value="<?php echo $this->getTransaction()->getSignature(); ?>" />
+    </form>
+<?php endif ?>
+<script type="text/javascript">
+//<![CDATA[
+    document.socolissimosimpliciteform.submit();
+//]]>
+</script>

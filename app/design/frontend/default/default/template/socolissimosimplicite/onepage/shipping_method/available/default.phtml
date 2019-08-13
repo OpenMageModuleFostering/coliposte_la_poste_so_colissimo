@@ -1,0 +1,20 @@
+<?php
+/**
+ * LaPoste_SoColissimoSimplicite
+ * 
+ * @category  LaPoste
+ * @package   LaPoste_SoColissimoSimplicite
+ * @copyright Copyright (c) 2010 La Poste
+ * @author    Smile (http://www.smile.fr)
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+<?php $_rate = $this->getRate() ?>
+<label for="s_method_<?php echo $_rate->getCode() ?>"><?php echo $_rate->getMethodTitle() ?>
+    <?php $_excl = $this->getShippingPrice($_rate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax()); ?>
+    <?php $_incl = $this->getShippingPrice($_rate->getPrice(), true); ?>
+    <?php echo $_excl; ?>
+    <?php if ($this->helper('tax')->displayShippingBothPrices() && $_incl != $_excl): ?>
+        (<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
+    <?php endif; ?>
+</label>
