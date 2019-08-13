@@ -2,7 +2,7 @@
 <!--
 /**
  * LaPoste_SoColissimoSimplicite
- * 
+ *
  * @category  LaPoste
  * @package   LaPoste_SoColissimoSimplicite
  * @copyright Copyright (c) 2010 La Poste
@@ -13,7 +13,7 @@
 <config>
     <modules>
         <LaPoste_SoColissimoSimplicite>
-            <version>2.3.4</version>
+            <version>2.3.5</version>
         </LaPoste_SoColissimoSimplicite>
     </modules>
 
@@ -110,7 +110,7 @@
             </socolissimosimplicite>
         </routers>
 
-        <events> 
+        <events>
             <controller_action_layout_load_before>
                 <observers>
                     <laposte_socolissimosimplicite_observer>

@@ -32,11 +32,11 @@ class LaPoste_SoColissimoSimplicite_Model_Carrier_ShippingMethod
         }
 
         // idem si la limite de poids ou la tranche de prix ne sont pas respectés
-        if (is_numeric($this->getConfigData('min_order_total')) && $request->getPackageValue() < $this->getConfigData('min_order_total')) {
+        if (is_numeric($this->getConfigData('min_order_total')) && $request->getPackageValueWithDiscount() < $this->getConfigData('min_order_total')) {
             return false;
         }
 
-        if (is_numeric($this->getConfigData('max_order_total')) && $request->getPackageValue() > $this->getConfigData('max_order_total')) {
+        if (is_numeric($this->getConfigData('max_order_total')) && $request->getPackageValueWithDiscount() > $this->getConfigData('max_order_total')) {
             return false;
         }
 
@@ -54,89 +54,79 @@ class LaPoste_SoColissimoSimplicite_Model_Carrier_ShippingMethod
         $method->setCarrierTitle($this->getConfigData('title'));
         $method->setMethod($this->_code);
 
-        /* @var $checkoutSession Mage_Checkout_Model_Session */
-        $checkoutSession = Mage::getSingleton('checkout/session');
-
-        /* @var $helper LaPoste_SoColissimoSimplicite_Helper_Data */
-        $helper = Mage::helper('socolissimosimplicite');
-
-        if ($helper->isSocoComplete()) {
-            // après la sortie de la plateforme socolissimo (IFrame), on utilise le prix transmis par socolissimo
-            // on ne peut pas se baser sur le prix de l'adresse de livraison car son prix est réinitialisé
-            // à l'étape du paiement dans certaines versions de Magento
-            $price = $checkoutSession->getData('socolissimosimplicite_chosen_shipping_amount');
-
-            // mettre à jour le libellé de la méthode de livraison
-            $deliveryMode = $checkoutSession->getData('socolissimosimplicite_chosen_delivery_mode');
-            if ($deliveryMode === 'DOM') {
-                $methodTitle = $this->getConfigData('name_home');
-            } elseif ($deliveryMode === 'RDV') {
-                $methodTitle = $this->getConfigData('name_appointment');
-            } elseif (in_array($deliveryMode, $helper->getPickupPointCodes())) {
-                $methodTitle = $this->getConfigData('name_pickup');
-            } elseif (in_array($deliveryMode, $helper->getPostOfficeCodes())) {
-                $methodTitle = $this->getConfigData('name_post_office');
-            } else {
-                // mode de livraison incorrect, on affiche le libellé par défaut
-                // ce cas pourrait par exemple se produire dans le cas de l'ajout d'un nouveau pays alors que ses codes
-                // de point de retrait et de bureaux de poste ne sont pas renseigné dans le fichier config.xml
-                $methodTitle = $this->getConfigData('name');
-            }
+        if (Mage::app()->getStore()->isAdmin()) {
+            // forcer la livraison à domicile dans la création de commande du backoffice
+            $methodTitle = $this->getConfigData('name_home');
+            $price = $this->_getCalculatedPrice(
+                $request,
+                $this->getConfigData('amountbasetype'),
+                $this->getConfigData('amountcalculation')
+            );
         } else {
-            // vérifier si la livraison So Colissimo est offerte et à partir de quel montant
-            $minQuotePriceForFreeShipping = $this->getConfigData('minquotepriceforfree');
-            $quotePriceWithDiscount = $request->getData('package_value_with_discount');
+            /* @var $checkoutSession Mage_Checkout_Model_Session */
+            $checkoutSession = Mage::getSingleton('checkout/session');
 
-            $isFreeShipping = $request->getFreeShipping()
-                || ($minQuotePriceForFreeShipping > 0 && $quotePriceWithDiscount >= $minQuotePriceForFreeShipping);
+            /* @var $helper LaPoste_SoColissimoSimplicite_Helper_Data */
+            $helper = Mage::helper('socolissimosimplicite');
 
-            if ($isFreeShipping) {
-                $defaultPrice = $pickupPrice = $price = 0;
+            if ($helper->isSocoComplete()) {
+                // après la sortie de la plateforme socolissimo (IFrame), on utilise le prix transmis par socolissimo
+                // on ne peut pas se baser sur le prix de l'adresse de livraison car son prix est réinitialisé
+                // à l'étape du paiement dans certaines versions de Magento
+                $price = $checkoutSession->getData('socolissimosimplicite_chosen_shipping_amount');
+
+                // mettre à jour le libellé de la méthode de livraison
+                $deliveryMode = $checkoutSession->getData('socolissimosimplicite_chosen_delivery_mode');
+                $methodTitle = $this->getMethodTitle($deliveryMode);
             } else {
-                // calcul des frais d'expéditions
-                $defaultPrice = $this->_getCalculatedPrice(
-                    $checkoutSession->getQuote()->getShippingAddress(),
-                    $this->getConfigData('amountbasetype'),
-                    $this->getConfigData('amountcalculation')
+                if ($this->isFreeShipping($request)) {
+                    $defaultPrice = $pickupPrice = $price = 0;
+                } else {
+                    // calcul des frais d'expéditions
+                    $defaultPrice = $this->_getCalculatedPrice(
+                        $request,
+                        $this->getConfigData('amountbasetype'),
+                        $this->getConfigData('amountcalculation')
+                    );
+
+                    // calcul des frais d'expédition commerçants (prend la valeur des frais par défaut si non renseignés
+                    $pickupPrice = $defaultPrice;
+                    $amountCalculationPickup = (string) $this->getConfigData('amountcalculation_pickup');
+                    if ($amountCalculationPickup !== '') {
+                        $pickupPrice = $this->_getCalculatedPrice(
+                            $request,
+                            $this->getConfigData('amountbasetype_pickup'),
+                            $amountCalculationPickup
+                        );
+                    }
+
+                    if ($helper->checkServiceAvailability()) {
+                        // prendre le prix le plus bas
+                        $price = min($defaultPrice, $pickupPrice);
+                    } else {
+                        // si la plateforme est indisponible, systématiquement prendre le prix normal
+                        // il n'y aura pas d'affichage de l'IFrame, ce prix sera directement utilisé pour commander
+                        $price = $defaultPrice;
+                    }
+                }
+
+                // sauvegarder les frais d'expédition dans la session (ils seront utilisés par la transaction et le form d'envoi)
+                $checkoutSession->setData(
+                    'socolissimosimplicite_available_shipping_amounts',
+                    array(
+                        'default' => $defaultPrice,
+                        'pickup' => $pickupPrice,
+                    )
                 );
 
-                // calcul des frais d'expédition commerçants (prend la valeur des frais par défaut si non renseignés
-                $pickupPrice = $defaultPrice;
-                $amountCalculationPickup = $this->getConfigData('amountcalculation_pickup');
-                if ($amountCalculationPickup !== null && $amountCalculationPickup !== '' && $amountCalculationPickup !== false) {
-                    $pickupPrice = $this->_getCalculatedPrice(
-                        $checkoutSession->getQuote()->getShippingAddress(),
-                        $this->getConfigData('amountbasetype_pickup'),
-                        $amountCalculationPickup
-                    );
-                }
-
-                if ($helper->checkServiceAvailability()) {
-                    // prendre le prix le plus bas
-                    $price = ($pickupPrice < $defaultPrice) ? $pickupPrice : $defaultPrice;
-                } else {
-                    // si la plateforme est indisponible, systématiquement prendre le prix normal
-                    // il n'y aura pas d'affichage de l'IFrame, ce prix sera directement utilisé pour commander
-                    $price = $defaultPrice;
-                }
+                // utiliser le nom de méthode par défaut
+                $methodTitle = $this->getConfigData('name');
             }
 
-            // sauvegarder les frais d'expédition dans la session (ils seront utilisés par la transaction et le form d'envoi)
-            $checkoutSession->setData(
-                'socolissimosimplicite_available_shipping_amounts',
-                array(
-                    'default' => $defaultPrice,
-                    'pickup' => $pickupPrice,
-                )
-            );
-
-            // utiliser le nom de méthode par défaut
-            $methodTitle = $this->getConfigData('name');
+            // mémoriser le sous-total de la quote, cela permettra de s'assurer que l'internaute
+            // ne l'ait pas modifié pendant qu'il était sur la plateforme So Colissimo
+            $checkoutSession->setData('socolissimosimplicite_quote_subtotal', $checkoutSession->getQuote()->getSubtotal());
         }
-
-        // mémoriser le sous-total de la quote, cela permettra de s'assurer que l'internaute
-        // ne l'ait pas modifié pendant qu'il était sur la plateforme So Colissimo
-        $checkoutSession->setData('socolissimosimplicite_quote_subtotal', $checkoutSession->getQuote()->getSubtotal());
 
         // on attribue à la méthode les frais d'expédition les plus bas (c'est ce qui sera affiché dans le tunnel de commande)
         $method->setMethodTitle($methodTitle);
@@ -145,6 +135,48 @@ class LaPoste_SoColissimoSimplicite_Model_Carrier_ShippingMethod
         $result->append($method);
 
         return $result;
+    }
+
+    /**
+     * Retourne le libellé de la méthode de livraison en fonction du mode choisi sur la plateforme So Colissimo
+     *
+     * @return string
+     */
+    protected function getMethodTitle($deliveryMode)
+    {
+        /* @var $helper LaPoste_SoColissimoSimplicite_Helper_Data */
+        $helper = Mage::helper('socolissimosimplicite');
+
+        if ($deliveryMode === 'DOM') {
+            $methodTitle = $this->getConfigData('name_home');
+        } elseif ($deliveryMode === 'RDV') {
+            $methodTitle = $this->getConfigData('name_appointment');
+        } elseif (in_array($deliveryMode, $helper->getPickupPointCodes())) {
+            $methodTitle = $this->getConfigData('name_pickup');
+        } elseif (in_array($deliveryMode, $helper->getPostOfficeCodes())) {
+            $methodTitle = $this->getConfigData('name_post_office');
+        } else {
+            // mode de livraison incorrect, on affiche le libellé par défaut
+            // ce cas pourrait par exemple se produire dans le cas de l'ajout d'un nouveau pays alors que ses codes
+            // de point de retrait et de bureaux de poste ne sont pas renseigné dans le fichier config.xml
+            $methodTitle = $this->getConfigData('name');
+        }
+
+        return $methodTitle;
+    }
+
+    /**
+     * Vérifie si la livraison So Colissimo est offerte
+     *
+     * @return bool
+     */
+    protected function isFreeShipping(Mage_Shipping_Model_Rate_Request $request)
+    {
+        $minPriceForFreeShipping = $this->getConfigData('minquotepriceforfree');
+        $packageValue = $request->getPackageValueWithDiscount();
+
+        return $request->getFreeShipping()
+            || ($minPriceForFreeShipping > 0 && $packageValue >= $minPriceForFreeShipping);
     }
 
     /**
@@ -160,12 +192,12 @@ class LaPoste_SoColissimoSimplicite_Model_Carrier_ShippingMethod
     /**
      * Retourne le montant des frais de livraison après éventuels calculs selon le mode de tarification choisi dans l'administration
      *
-     * @param Mage_Sales_Model_Quote_Address $shippingAddress
-     * @param string                         $amountBaseType
-     * @param string                         $amountBaseCalculation
+     * @param Mage_Shipping_Model_Rate_Request $request
+     * @param string                           $amountBaseType
+     * @param string                           $amountBaseCalculation
      * @return float
      */
-    protected function _getCalculatedPrice($shippingAddress, $amountBaseType, $amountCalculation)
+    protected function _getCalculatedPrice(Mage_Shipping_Model_Rate_Request $request, $amountBaseType, $amountCalculation)
     {
         /* @var $helper LaPoste_SoColissimoSimplicite_Helper_Data */
         $helper = Mage::helper('socolissimosimplicite');
@@ -189,7 +221,7 @@ class LaPoste_SoColissimoSimplicite_Model_Carrier_ShippingMethod
                         krsort($rules, SORT_NUMERIC);
 
                         // récupération du poids total de la commande (en kilogrammes)
-                        $totalWeight = $shippingAddress->getWeight();
+                        $totalWeight = $request->getPackageWeight();
 
                         // recherche du prix selon les fourchettes de tarifs données
                         $calculatedPrice = false;
@@ -214,7 +246,7 @@ class LaPoste_SoColissimoSimplicite_Model_Carrier_ShippingMethod
                         krsort($rules, SORT_NUMERIC);
 
                         // recuperation du sous total HT du panier
-                        $totalAmount = $shippingAddress->getSubtotal();
+                        $totalAmount = $request->getPackageValueWithDiscount();
 
                         // recherche du prix selon les fourchettes de tarifs donnees
                         $calculatedPrice = false;
