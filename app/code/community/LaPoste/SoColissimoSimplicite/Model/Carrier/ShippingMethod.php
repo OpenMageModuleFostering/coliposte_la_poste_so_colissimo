@@ -176,13 +176,13 @@ class LaPoste_SoColissimoSimplicite_Model_Carrier_ShippingMethod
                 if (is_numeric($amountCalculation)) {
                     $calculatedPrice = $amountCalculation;
                 } else {
-                    throw new Exception($helper->__('SoColissimo : la valeur de configuration "Calcul des frais de livraison" fournie "' . $amountCalculation . '" doit être un numérique de la forme 5.50'));
+                    throw new Exception($helper->__('SoColissimo : la valeur de configuration "Calcul des frais de livraison" fournie "%s" doit être un numérique de la forme 5.50', $amountCalculation));
                 }
                 break;
             case 'per_weight':
                 $rules = json_decode($amountCalculation, true);
                 if (is_null($rules) || empty($rules)) {
-                    throw new Exception($helper->__('SoColissimo : la valeur de configuration "Calcul des frais de livraison" pour le type "tarif selon le poids" fournie "' . $amountCalculation . '" n\'est pas dans le bon format, exemple {"0":"2.90","0.5":"4.50","5":"8","10":"14"}'));
+                    throw new Exception($helper->__('SoColissimo : la valeur de configuration "Calcul des frais de livraison" pour le type "tarif selon le poids" fournie "%s" n\'est pas dans le bon format, exemple {"0":"2.90","0.5":"4.50","5":"8","10":"14"}', $amountCalculation));
                 } else {
                     try {
                         // tri par poids décroissant
@@ -200,14 +200,14 @@ class LaPoste_SoColissimoSimplicite_Model_Carrier_ShippingMethod
                             }
                         }
                     } catch (Exception $e) {
-                        throw new Exception($helper->__('SoColissimo : la valeur de configuration "Calcul des frais de livraison" pour le type "tarif selon le poids" fournie "' . $amountCalculation . '" n\'est pas dans le bon format, exemple {"0":"2.90","0.5":"4.50","5":"8","10":"14"}'));
+                        throw new Exception($helper->__('SoColissimo : la valeur de configuration "Calcul des frais de livraison" pour le type "tarif selon le poids" fournie "%s" n\'est pas dans le bon format, exemple {"0":"2.90","0.5":"4.50","5":"8","10":"14"}', $amountCalculation));
                     }
                 }
                 break;
             case 'per_amount':
                 $rules = json_decode($amountCalculation, true);
                 if (is_null($rules) || empty($rules)) {
-                    throw new Exception($helper->__('SoColissimo : la valeur de configuration "Calcul des frais de livraison" pour le type "tarif selon le sous-total" fournie "' . $amountCalculation . '" n\'est pas dans le bon format, exemple {"0":"3","50":"5","100":"8","250":"0"}'));
+                    throw new Exception($helper->__('SoColissimo : la valeur de configuration "Calcul des frais de livraison" pour le type "tarif selon le sous-total" fournie "%s" n\'est pas dans le bon format, exemple {"0":"3","50":"5","100":"8","250":"0"}', $amountCalculation));
                 } else {
                     try {
                         // tri par montant décroissant
@@ -225,12 +225,12 @@ class LaPoste_SoColissimoSimplicite_Model_Carrier_ShippingMethod
                             }
                         }
                     } catch (Exception $e) {
-                        throw new Exception($helper->__('SoColissimo : la valeur de configuration "Calcul des frais de livraison" pour le type "tarif selon le sous-total" fournie "' . $amountCalculation . '" n\'est pas dans le bon format, exemple {"0":"3","50":"5","100":"8","250":"0"}'));
+                        throw new Exception($helper->__('SoColissimo : la valeur de configuration "Calcul des frais de livraison" pour le type "tarif selon le sous-total" fournie "%s" n\'est pas dans le bon format, exemple {"0":"3","50":"5","100":"8","250":"0"}', $amountCalculation));
                     }
                 }
                 break;
             default:
-                throw new Exception($helper->__('SoColissimo : la valeur de configuration "Type des frais de livraison" fournie "' . $amountBaseType . '" n\'est pas disponible'));
+                throw new Exception($helper->__('SoColissimo : la valeur de configuration "Type des frais de livraison" fournie "%s" n\'est pas disponible', $amountCalculation));
                 break;
         }
 

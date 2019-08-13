@@ -167,7 +167,7 @@ class LaPoste_SoColissimoSimplicite_FormController extends Mage_Core_Controller_
         $newSignature = $this->getRequest()->getParam('SIGNATURE');
         // signature invalide
         if (empty($newSignature)) {
-            throw new Exception(Mage::helper('socolissimosimplicite')->__("SoColissimo : la signature retournée par colissimo est vide"));
+            throw new Exception(Mage::helper('socolissimosimplicite')->__('SoColissimo : la signature retournée par colissimo est vide'));
         }
 
         $transactionId = $this->getRequest()->getParam('ORDERID');
@@ -177,7 +177,7 @@ class LaPoste_SoColissimoSimplicite_FormController extends Mage_Core_Controller_
 
         // transaction inexistante
         if ($transactions->getSize() == 0) {
-            throw new Exception(Mage::helper('socolissimosimplicite')->__("SoColissimo : la transaction avec colissimo (id=".$transactionId.") n'est pas valide car inconnue de Magento"));
+            throw new Exception(Mage::helper('socolissimosimplicite')->__('SoColissimo : la transaction avec colissimo (id="%s") n\'est pas valide car inconnue de Magento', $transactionId));
         }
 
         // mettre à jour la signature si elle a changée

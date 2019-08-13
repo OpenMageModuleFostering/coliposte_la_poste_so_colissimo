@@ -11,41 +11,29 @@
  */
 -->
 <layout version="0.1.0">
-    <checkout_onepage_index translate="label">
+    <checkout_cart_index>
         <reference name="content">
-            <action method="unsetChild"><name>checkout.onepage</name></action>
-            <block type="socolissimosimplicite/onepage" name="checkout.onepage" template="checkout/onepage.phtml">
-                <block type="checkout/onepage_login" name="checkout.onepage.login" as="login" template="checkout/onepage/login.phtml">
-                    <block type="page/html_wrapper" name="checkout.onepage.login.before" as="login_before">
-                        <action method="setMayBeInvisible"><value>1</value></action>
-                    </block>
-                </block>
-                <block type="checkout/onepage_billing" name="checkout.onepage.billing" as="billing" template="checkout/onepage/billing.phtml"/>
-                <block type="checkout/onepage_shipping" name="checkout.onepage.shipping" as="shipping" template="checkout/onepage/shipping.phtml"/>
-                <block type="checkout/onepage_shipping_method" name="checkout.onepage.shipping_method" as="shipping_method" template="socolissimosimplicite/onepage/shipping_method.phtml">
-                    <block type="socolissimosimplicite/onepage_shipping_method_available" name="checkout.onepage.shipping_method.available" as="available" template="socolissimosimplicite/onepage/shipping_method/available.phtml">
-                        <action method="addItemRender"><type>default</type><block>socolissimosimplicite/onepage_shipping_method_available_item</block><template>socolissimosimplicite/onepage/shipping_method/available/default.phtml</template></action>
-                        <action method="addItemRender"><type>socolissimosimplicite</type><block>socolissimosimplicite/onepage_shipping_method_available_item</block><template>socolissimosimplicite/onepage/shipping_method/available/socolissimosimplicite.phtml</template></action>
-                    </block>
-                    <block type="checkout/onepage_shipping_method_additional" name="checkout.onepage.shipping_method.additional" as="additional" template="checkout/onepage/shipping_method/additional.phtml"/>
-                </block>
-                <block type="checkout/onepage_payment" name="checkout.onepage.payment" as="payment" template="checkout/onepage/payment.phtml">
-                    <block type="checkout/onepage_payment_methods" name="checkout.payment.methods" as="methods" template="checkout/onepage/payment/methods.phtml">
-                        <action method="setMethodFormTemplate"><method>purchaseorder</method><template>payment/form/purchaseorder.phtml</template></action>
-                    </block>
-                </block>
-                <block type="checkout/onepage_review" name="checkout.onepage.review" as="review" template="checkout/onepage/review.phtml">
-                    <block type="checkout/agreements" name="checkout.onepage.agreements" as="agreements" template="checkout/onepage/agreements.phtml"/>
-                </block>
-            </block>
+            <!-- personnalise l'affichage du mode de livraison So Colissimo (dans le bloc d'estimation des frais de port) -->
+            <block type="core/template" name="shippingmethod.socolissimosimplicite" template="socolissimosimplicite/onepage/shipping_method/socolissimosimplicite.phtml" after="iframe.socolissimosimplicite" />
+        </reference>
+    </checkout_cart_index>
+
+    <checkout_onepage_index>
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>js/socolissimosimplicite/shipping_method.js</name></action>
+        </reference>
+
+        <reference name="content">
+            <!-- gère le chargement de l'IFrame So Colissimo -->
+            <block type="socolissimosimplicite/iframe" name="iframe.socolissimosimplicite" template="socolissimosimplicite/iframe.phtml" after="checkout.onepage" />
+            <!-- personnalise l'affichage du mode de livraison So Colissimo (lors du rechargement du onepage après la validation de l'IFrame) -->
+            <block type="core/template" name="shippingmethod.socolissimosimplicite" template="socolissimosimplicite/onepage/shipping_method/socolissimosimplicite.phtml" after="iframe.socolissimosimplicite" />
         </reference>
     </checkout_onepage_index>
 
     <checkout_onepage_shippingmethod>
-        <block type="socolissimosimplicite/onepage_shipping_method_available" name="root" output="toHtml" template="socolissimosimplicite/onepage/shipping_method/available.phtml">
-            <action method="addItemRender"><type>default</type><block>socolissimosimplicite/onepage_shipping_method_available_item</block><template>socolissimosimplicite/onepage/shipping_method/available/default.phtml</template></action>
-            <action method="addItemRender"><type>socolissimosimplicite</type><block>socolissimosimplicite/onepage_shipping_method_available_item</block><template>socolissimosimplicite/onepage/shipping_method/available/socolissimosimplicite.phtml</template></action>
-        </block>
+        <!-- personnalise l'affichage du mode de livraison So Colissimo (lors du chargement en AJAX de l'étape livraison) -->
+        <block type="core/template" name="root.socolissimosimplicite" output="toHtml" template="socolissimosimplicite/onepage/shipping_method/socolissimosimplicite.phtml" after="root" />
     </checkout_onepage_shippingmethod>
 
     <socolissimosimplicite_form_send>
@@ -59,7 +47,7 @@
 
     <socolissimosimplicite_form_failure>
         <reference name="content">
-            <block type="core/template" template="socolissimosimplicite/form/failure.phtml" />
+            <block type="core/template" name="failure.socolissimosimplicite" template="socolissimosimplicite/form/failure.phtml" />
         </reference>
     </socolissimosimplicite_form_failure>
 </layout>

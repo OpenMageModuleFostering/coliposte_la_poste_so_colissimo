@@ -13,13 +13,21 @@
 <config>
     <modules>
         <LaPoste_SoColissimoSimplicite>
-            <version>2.2.0</version>
+            <version>2.3.0</version>
         </LaPoste_SoColissimoSimplicite>
     </modules>
 
     <global>
         <blocks>
-            <socolissimosimplicite><class>LaPoste_SoColissimoSimplicite_Block</class></socolissimosimplicite>
+            <socolissimosimplicite>
+                <class>LaPoste_SoColissimoSimplicite_Block</class>
+            </socolissimosimplicite>
+
+            <checkout>
+                <rewrite>
+                    <onepage>LaPoste_SoColissimoSimplicite_Block_Onepage</onepage>
+                </rewrite>
+            </checkout>
         </blocks>
 
         <models>
@@ -27,7 +35,7 @@
                 <class>LaPoste_SoColissimoSimplicite_Model</class>
                 <resourceModel>socolissimosimplicite_mysql4</resourceModel>
             </socolissimosimplicite>
-            
+
             <socolissimosimplicite_mysql4>
                 <class>LaPoste_SoColissimoSimplicite_Model_Mysql4</class>
                 <entities>
@@ -67,16 +75,6 @@
                 </connection>
             </socolissimosimplicite_write>
         </resources>
-
-        <translate>
-            <modules>
-                <LaPoste_SoColissimoSimplicite>
-                    <files>
-                        <default>LaPoste_SoColissimoSimplicite.csv</default>
-                    </files>
-                </LaPoste_SoColissimoSimplicite>
-            </modules>
-        </translate>
     </global>
 
     <frontend>
@@ -92,6 +90,16 @@
                 </socolissimosimplicite>
             </updates>
         </layout>
+
+        <translate>
+            <modules>
+                <LaPoste_SoColissimoSimplicite>
+                    <files>
+                        <default>LaPoste_SoColissimoSimplicite.csv</default>
+                    </files>
+                </LaPoste_SoColissimoSimplicite>
+            </modules>
+        </translate>
 
         <routers>
             <socolissimosimplicite>
@@ -133,6 +141,18 @@
             </checkout_type_onepage_save_order>
         </events>
     </frontend>
+
+    <adminhtml>
+        <translate>
+            <modules>
+                <LaPoste_SoColissimoSimplicite>
+                    <files>
+                        <default>LaPoste_SoColissimoSimplicite.csv</default>
+                    </files>
+                </LaPoste_SoColissimoSimplicite>
+            </modules>
+        </translate>
+    </adminhtml>
 
     <default>
         <carriers>

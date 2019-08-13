@@ -32,8 +32,6 @@ class LaPoste_SoColissimoSimplicite_Block_Onepage extends Mage_Checkout_Block_On
 
         if ($checkout->getData('socolissimosimplicite_checkout_onepage_nextstep')) {
             $this->_stepToActivate = $checkout->getData('socolissimosimplicite_checkout_onepage_nextstep');
-            // supprime la variable de session pour qu'un refresh réinitialise le onepage
-            $checkout->unsetData('socolissimosimplicite_checkout_onepage_nextstep');
         }
 
         $steps = $this->getSteps();
@@ -44,7 +42,7 @@ class LaPoste_SoColissimoSimplicite_Block_Onepage extends Mage_Checkout_Block_On
                 // permet d'afficher le contenu de l'étape en cours et de revenir sur les étapes précédentes
                 $this->getCheckout()->setStepData($key, 'allow', true);
 
-                if ($key == $this->_stepToActivate) {
+                if ($key === $this->_stepToActivate) {
                     break;
                 }
 

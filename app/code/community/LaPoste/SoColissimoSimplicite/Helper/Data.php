@@ -189,6 +189,16 @@ class LaPoste_SoColissimoSimplicite_Helper_Data extends Mage_Core_Helper_Abstrac
     }
 
     /**
+     * Vérifie si le carrier est activé ou non
+     *
+     * @return bool
+     */
+    public function isActive()
+    {
+        return (bool) Mage::getStoreConfig('carriers/socolissimosimplicite/active');
+    }
+
+    /**
      * Retourne l'identifiant d'accès au FO de So Colissimo Simplicité
      *
      * @return string
@@ -399,7 +409,7 @@ class LaPoste_SoColissimoSimplicite_Helper_Data extends Mage_Core_Helper_Abstrac
                 try {
                     $output = curl_exec($c);
                     $available = (trim($output) === '[OK]');
-                } catch(Exception $e) {
+                } catch (Exception $e) {
                     Mage::logException($e);
                     $available = false;
                 }
@@ -534,16 +544,13 @@ class LaPoste_SoColissimoSimplicite_Helper_Data extends Mage_Core_Helper_Abstrac
     }
 
     /**
-     * Retourne le libellé du prix affiché à l'étape livraison du tunnel de commande
+     * Retourne le format du prix affiché à l'étape livraison du tunnel de commande
      * pour la méthode de livraison So Colissimo
      *
-     * @param string $formattedPrice
      * @return string
      */
-    public function getShippingPriceLabel($formattedPrice)
+    public function getShippingPriceFormat()
     {
-        $format = Mage::getStoreConfig('carriers/socolissimosimplicite/price_format');
-
-        return empty($format) ? $formattedPrice : str_replace('%s', $formattedPrice, $format);
+        return Mage::getStoreConfig('carriers/socolissimosimplicite/price_format');
     }
 }

@@ -14,7 +14,7 @@
     <sections>
         <carriers>
             <groups>
-                <socolissimosimplicite>
+                <socolissimosimplicite translate="label" module="socolissimosimplicite">
                     <label>So Colissimo</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>100</sort_order>
@@ -22,8 +22,8 @@
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
-                        <active translate="label">
-                            <label>Activé</label>
+                        <active translate="label" module="shipping">
+                            <label>Enabled</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>10</sort_order>
@@ -44,11 +44,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>
-                                <![CDATA[
-                                Nom du mode de livraison affiché dans le tunnel de commande à l'étape "Mode de livraison".
-                                ]]>
-                            </comment>
+                            <comment><![CDATA[Nom du mode de livraison affiché dans le tunnel de commande à l'étape "Mode de livraison".]]></comment>
                         </name>
                         <name_home translate="label comment">
                             <label>Nom du mode de livraison (domicile)</label>
@@ -56,11 +52,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>
-                                <![CDATA[
-                                Nom du mode de livraison une fois que l'internaute a choisi la livraison à domicile dans l'interface de So Colissimo.
-                                ]]>
-                            </comment>
+                            <comment><![CDATA[Nom du mode de livraison une fois que l'internaute a choisi la livraison à domicile dans l'interface de So Colissimo.]]></comment>
                         </name_home>
                         <name_appointment translate="label comment">
                             <label>Nom du mode de livraison (rendez-vous)</label>
@@ -68,11 +60,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>
-                                <![CDATA[
-                                Nom du mode de livraison une fois que l'internaute a choisi la livraison sur rendez-vous dans l'interface de So Colissimo.
-                                ]]>
-                            </comment>
+                            <comment><![CDATA[Nom du mode de livraison une fois que l'internaute a choisi la livraison sur rendez-vous dans l'interface de So Colissimo.]]></comment>
                         </name_appointment>
                         <name_pickup translate="label comment">
                             <label>Nom du mode de livraison (point de retrait commerçant)</label>
@@ -80,11 +68,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>
-                                <![CDATA[
-                                Nom du mode de livraison une fois que l'internaute a choisi la livraison en point de retrait commerçant dans l'interface de So Colissimo.
-                                ]]>
-                            </comment>
+                            <comment><![CDATA[Nom du mode de livraison une fois que l'internaute a choisi la livraison en point de retrait commerçant dans l'interface de So Colissimo.]]></comment>
                         </name_pickup>
                         <name_post_office translate="label comment">
                             <label>Nom du mode de livraison (bureau de poste)</label>
@@ -92,11 +76,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>
-                                <![CDATA[
-                                Nom du mode de livraison une fois que l'internaute a choisi la livraison en bureau de poste dans l'interface de So Colissimo.
-                                ]]>
-                            </comment>
+                            <comment><![CDATA[Nom du mode de livraison une fois que l'internaute a choisi la livraison en bureau de poste dans l'interface de So Colissimo.]]></comment>
                         </name_post_office>
                         <selectmessage translate="label">
                             <label>Message lors de la sélection du mode de livraison</label>
@@ -178,23 +158,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>
-                                <![CDATA[
-                                Il s’agit des frais d’expédition appliqués par défaut pour tous les modes de livraison en France.<br/>
-                                Si <strong>tarif unique</strong>, indiquer le montant (sans devise) ;<br />
-                                Si <strong>tarif selon le poids</strong>, indiquer :<br />
-                                {"poids en kg": "tarif1", "poids en kg": "tarif2", ...}<br />
-                                Le tarif est appliqué pour un poids supérieur ou égal au poids correspondant.<br />
-                                Exemple de conditions tarifaires selon le poids :<br/>
-                                {"0": "2.90", "0.5": "4.50", "5": "8", "10": "14"}<br/>
-                                   Si <strong>tarif selon le sous-total du panier</strong>,
-                                indiquer :<br />
-                                {"montant": "tarif1", "montant": "tarif2", ...}<br />
-                                Le tarif est appliqué pour un montant supérieur ou égal au montant correspondant.<br />
-                                Exemple de conditions tarifaires selon le montant :<br />
-                                {"0": "3", "50": "5", "100": "8", "250": "0"}
-                                ]]>
-                            </comment>
+                            <comment><![CDATA[Il s’agit des frais d’expédition appliqués par défaut pour tous les modes de livraison en France.<br/>Si <strong>tarif unique</strong>, indiquer le montant (sans devise) ;<br />Si <strong>tarif selon le poids</strong>, indiquer :<br />{"poids en kg": "tarif1", "poids en kg": "tarif2", ...}<br />Le tarif est appliqué pour un poids supérieur ou égal au poids correspondant.<br />Exemple de conditions tarifaires selon le poids :<br/>{"0": "2.90", "0.5": "4.50", "5": "8", "10": "14"}<br/>Si <strong>tarif selon le sous-total du panier</strong>, indiquer :<br />{"montant": "tarif1", "montant": "tarif2", ...}<br />Le tarif est appliqué pour un montant supérieur ou égal au montant correspondant.<br />Exemple de conditions tarifaires selon le montant :<br />{"0": "3", "50": "5", "100": "8", "250": "0"}]]></comment>
                         </amountcalculation>
                         <amountbasetype_pickup translate="label">
                             <label>Type des frais de livraison commerçants</label>
@@ -213,13 +177,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>
-                                <![CDATA[
-                                Il s'agit des frais d'expédition appliqués pour la livraison en point de retrait commerçant.<br />
-                                Le fonctionnement est identique au paramètre "Calcul des frais de livraison".<br />
-                                Laisser vide pour ne pas appliquer de tarif spécifique à la livraison en point de retrait commerçant.
-                                ]]>
-                            </comment>
+                            <comment><![CDATA[Il s'agit des frais d'expédition appliqués pour la livraison en point de retrait commerçant.<br />Le fonctionnement est identique au paramètre "Calcul des frais de livraison".<br />Laisser vide pour ne pas appliquer de tarif spécifique à la livraison en point de retrait commerçant.]]></comment>
                         </amountcalculation_pickup>
                         <minquotepriceforfree translate="label">
                             <label>Livraison offerte à partir de (en €)</label>
@@ -227,10 +185,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>
-                                <![CDATA[
-                                Laisser vide pour ne pas offrir les frais de livraison
-                                ]]>
+                            <comment><![CDATA[Laisser vide pour ne pas offrir les frais de livraison.]]>
                             </comment>
                         </minquotepriceforfree>
                         <price_format translate="label comment">
@@ -239,17 +194,9 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>
-                                <![CDATA[
-                                Format du tarif du mode de livraison So Colissimo, à l'étape de livraison du tunnel de commande.<br />
-                                Laisser vide pour garder l'affichage natif de Magento.<br />
-                                Le tarif est représenté par "%s".<br />
-                                Exemple : avec une valeur "(à partir de %s)" et des frais de livraison de 10€, le prix affiché dans
-                                le tunnel de commande sera "(à partir de 10€)".
-                                ]]>
-                            </comment>
+                            <comment><![CDATA[Format du tarif du mode de livraison So Colissimo, à l'étape de livraison du tunnel de commande.<br />Laisser vide pour garder l'affichage natif de Magento.<br />Le tarif est représenté par "%s".<br />Exemple : avec une valeur "(à partir de %s)" et des frais de livraison de 10€, le prix affiché dans le tunnel de commande sera "(à partir de 10€)".]]></comment>
                         </price_format>
-                        <min_order_total translate="label">
+                        <min_order_total translate="label" module="payment">
                             <label>Minimum Order Total</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>220</sort_order>
@@ -257,7 +204,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </min_order_total>
-                        <max_order_total translate="label">
+                        <max_order_total translate="label" module="payment">
                             <label>Maximum Order Total</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>230</sort_order>
@@ -271,13 +218,9 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>
-                                <![CDATA[
-                                So Colissimo ne sera pas proposé si le poids dépasse le montant saisi.
-                                ]]>
-                            </comment>
+                            <comment><![CDATA[So Colissimo ne sera pas proposé si le poids dépasse le montant saisi.]]></comment>
                         </max_weight>
-                        <sallowspecific translate="label">
+                        <sallowspecific translate="label" module="shipping">
                             <label>Ship to Applicable Countries</label>
                             <frontend_type>select</frontend_type>
                             <sort_order>250</sort_order>
@@ -288,7 +231,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </sallowspecific>
-                        <specificcountry translate="label comment">
+                        <specificcountry translate="label comment" module="shipping">
                             <label>Ship to Specific Countries</label>
                             <frontend_type>multiselect</frontend_type>
                             <sort_order>260</sort_order>
@@ -297,14 +240,11 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment>
-                                <![CDATA[
-                                Les pays compatibles sont la France et la Belgique.
-                                ]]>
+                            <comment><![CDATA[Les pays compatibles sont la France et la Belgique.]]>
                             </comment>
                             <can_be_empty>1</can_be_empty>
                         </specificcountry>
-                        <sort_order translate="label">
+                        <sort_order translate="label" module="shipping">
                             <label>Sort Order</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>270</sort_order>

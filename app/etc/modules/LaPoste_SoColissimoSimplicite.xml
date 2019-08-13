@@ -16,8 +16,10 @@
             <active>true</active>
             <codePool>community</codePool>
             <depends>
-                <Mage_Shipping/>
-                <Mage_Checkout/>
+                <Mage_Checkout />
+                <Mage_Payment />
+                <Mage_Sales />
+                <Mage_Shipping />
             </depends>
         </LaPoste_SoColissimoSimplicite>
     </modules>

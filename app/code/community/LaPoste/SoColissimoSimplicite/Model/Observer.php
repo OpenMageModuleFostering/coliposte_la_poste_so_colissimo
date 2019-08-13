@@ -35,7 +35,6 @@ class LaPoste_SoColissimoSimplicite_Model_Observer
         'CECOMPANYNAME'       => 'company',
         'PRZIPCODE'           => 'postcode',
         'PRTOWN'              => 'city',
-
     );
 
     /**
@@ -147,6 +146,10 @@ class LaPoste_SoColissimoSimplicite_Model_Observer
                     $observer->getEvent()->getOrder()->setSocoRelayPointCode($shippingData['PRID']);
                 }
 
+                if (isset($shippingData['CODERESEAU'])) {
+                    $observer->getEvent()->getOrder()->setSocoNetworkCode($shippingData['CODERESEAU']);
+                }
+
                 if (isset($shippingData['CECIVILITY'])) {
                     $observer->getEvent()->getOrder()->setSocoCivility($shippingData['CECIVILITY']);
                 }
@@ -160,7 +163,7 @@ class LaPoste_SoColissimoSimplicite_Model_Observer
                 }
             }
         } catch (Exception $e) {
-            Mage::Log('Failed to save so-colissimo data : '.print_r($shippingData, true));
+            Mage::Log('Failed to save so-colissimo data : ' . print_r($shippingData, true));
         }
     }
 
@@ -191,62 +194,63 @@ class LaPoste_SoColissimoSimplicite_Model_Observer
             $customerNotesArray = array();
 
             foreach ($shippingData as $fieldSoCo => $valueSoCo) {
-                if (array_key_exists($fieldSoCo, $this->_mapFields)) {
-                    $fieldMagento = $this->_mapFields[$fieldSoCo];
-                    // So Colissimo renvoie de l'iso8859-1, on encode en utf8
-                    $arrayData[$fieldMagento] = $valueSoCo;
-                } elseif ($valueSoCo) {
-                    $shippingValue = $shippingData[$fieldSoCo];
-                    switch ($fieldSoCo) {
-                        // cas civilité
-                        case 'CECIVILITY':
-                            $arrayData['prefix'] = $helper->getPrefixForMagento($shippingValue);
-                            break;
+                // ne pas traiter les champs vides (SoCo peut par exemple renvoyer un numéro de téléphone vide)
+                if ($valueSoCo !== '') {
+                    if (array_key_exists($fieldSoCo, $this->_mapFields)) {
+                        $fieldMagento = $this->_mapFields[$fieldSoCo];
+                        $arrayData[$fieldMagento] = $valueSoCo;
+                    } else {
+                        switch ($fieldSoCo) {
+                            // cas civilité
+                            case 'CECIVILITY':
+                                $arrayData['prefix'] = $helper->getPrefixForMagento($valueSoCo);
+                                break;
 
-                        // cas livraison à domicile
-                        case 'CEADRESS3':
-                            $street['0'] = $shippingValue; //mis en 1er car numéro de rue obligatoire côté SoCo
-                            break;
-                        case 'CEADRESS1':
-                            $street['1'] = $shippingValue;
-                            break;
-                        case 'CEADRESS2':
-                            $street['2'] = $shippingValue;
-                            break;
-                        case 'CEADRESS4':
-                            $street['3'] = $shippingValue;
-                            break;
+                            // cas livraison à domicile
+                            case 'CEADRESS3':
+                                $street['0'] = $valueSoCo; //mis en 1er car numéro de rue obligatoire côté SoCo
+                                break;
+                            case 'CEADRESS1':
+                                $street['1'] = $valueSoCo;
+                                break;
+                            case 'CEADRESS2':
+                                $street['2'] = $valueSoCo;
+                                break;
+                            case 'CEADRESS4':
+                                $street['3'] = $valueSoCo;
+                                break;
 
-                        // cas livraison en point relais
-                        case 'PRNAME':
-                            $street['0'] = $shippingValue;
-                            break;
-                        case 'PRCOMPLADRESS':
-                            $street['1'] = $shippingValue;
-                            break;
-                        case 'PRADRESS1':
-                            $street['2'] = $shippingValue;
-                            break;
-                        case 'PRADRESS2':
-                            $street['3'] = $shippingValue;
-                            break;
+                            // cas livraison en point relais
+                            case 'PRNAME':
+                                $street['0'] = $valueSoCo;
+                                break;
+                            case 'PRCOMPLADRESS':
+                                $street['1'] = $valueSoCo;
+                                break;
+                            case 'PRADRESS1':
+                                $street['2'] = $valueSoCo;
+                                break;
+                            case 'PRADRESS2':
+                                $street['3'] = $valueSoCo;
+                                break;
 
-                        // autres informations sur la livraison
-                        case 'CEENTRYPHONE':
-                            $customerNotesArray['0'] = $helper->__('Interphone').' : '.$shippingValue;
-                            break;
-                        case 'CEDOORCODE1':
-                            $customerNotesArray['1'] = $helper->__('Code porte').' : '.$shippingValue;
-                            break;
-                        case 'CEDOORCODE2':
-                            $customerNotesArray['2'] = $helper->__('Code porte 2').' : '.$shippingValue;
-                            break;
-                        case 'CEDELIVERYINFORMATION':
-                            $customerNotesArray['3'] = $shippingValue;
-                            break;
+                            // autres informations sur la livraison
+                            case 'CEENTRYPHONE':
+                                $customerNotesArray['0'] = $helper->__('Interphone :') . ' ' . $valueSoCo;
+                                break;
+                            case 'CEDOORCODE1':
+                                $customerNotesArray['1'] = $helper->__('Code porte :') . ' ' . $valueSoCo;
+                                break;
+                            case 'CEDOORCODE2':
+                                $customerNotesArray['2'] = $helper->__('Code porte 2 :') . ' ' . $valueSoCo;
+                                break;
+                            case 'CEDELIVERYINFORMATION':
+                                $customerNotesArray['3'] = $valueSoCo;
+                                break;
 
-                        default:
-                            break;
+                            default:
+                                break;
+                        }
                     }
                 }
             }

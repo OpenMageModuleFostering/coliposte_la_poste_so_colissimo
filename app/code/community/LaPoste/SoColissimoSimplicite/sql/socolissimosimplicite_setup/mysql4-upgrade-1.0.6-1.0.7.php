@@ -18,7 +18,6 @@ $this->removeAttribute('order', 'soco_door_code2');
 $this->removeAttribute('order', 'soco_interphone');
 $this->removeAttribute('order', 'soco_relay_point_code');
 
-
 $this->addAttribute(
     'order',
     'soco_product_code',
