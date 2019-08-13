@@ -157,13 +157,21 @@ class LaPoste_SoColissimoSimplicite_Helper_Data extends Mage_Core_Helper_Abstrac
         $phone = $shippingAddress->getTelephone();
         $isValid = true;
 
+        // Supression des caractères non numériques (sauf +)
+        $phone = preg_replace('/[^0-9+]/', '', $phone);
+
         switch ($country) {
             case 'FR':
+                // Remplacer +33 par 0
+                $phone = str_replace('+33', '0', $phone);
+
+                // Le numéro est valide s'il commence par 06 ou 07
                 $firstTwoNumbers = substr($phone, 0, 2);
                 $isValid = $firstTwoNumbers === '06' || $firstTwoNumbers === '07';
                 break;
 
             case 'BE':
+                // Le numéro est valide s'il commence par +324
                 $firstFourNumbers = substr($phone, 0, 4);
                 $isValid = $firstFourNumbers === '+324';
                 break;
