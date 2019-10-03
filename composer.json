@@ -1,16 +1,19 @@
 {
-    "name": "OpenMageModuleFostering/ColiPoste_La_Poste_So_Colissimo",
+    "name": "OpenMageModuleFostering\/ColiPoste_La_Poste_So_Colissimo",
     "type": "magento-module",
     "license": "OSL-v3.0",
     "homepage": "",
-    "description": "Extension officielle permettant de proposer le mode de livraison So Colissimo de La Poste / ColisPoste",
+    "description": "Extension officielle permettant de proposer le mode de livraison So Colissimo de La Poste \/ ColisPoste",
     "authors": [
-    {
-        "name": "Berlioz",
-        "email": "Aline.BERLIOZ@laposte.fr"
-    }
-],
+        {
+            "name": "Berlioz",
+            "email": "Aline.BERLIOZ@laposte.fr"
+        }
+    ],
     "suggest": {
-        "magento-hackathon/magento-composer-installer": "*"
-    }
+        "magento-hackathon\/magento-composer-installer": "*"
+    },
+    "keywords": [
+        "openmage-module"
+    ]
 }
